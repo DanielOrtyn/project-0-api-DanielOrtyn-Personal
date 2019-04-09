@@ -32,7 +32,8 @@ userRouter.get(``,
 userRouter.get(`/:id`, (req, res) => {
     const id: number = req.params.id
     console.log(`retreiving user with id: ${req.params.id}`)
-    const user = users.find(u => u.userId === id)
+    const user = users.find(u => u.userId === +id)
+    console.log(user)
     res.send(user)
 })
 
