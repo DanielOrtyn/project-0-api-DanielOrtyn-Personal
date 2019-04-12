@@ -1,11 +1,11 @@
+import { IRole } from './IRole';
 
-export class Role {
-    private static idCounter = 0
-    roleId: number
-    role: string
+export class Role implements IRole {
+    roleId: number;
+    role: string;
 
-    constructor(newRole = `associate`) {
-        this.roleId = Role.idCounter++
-        this.role = newRole
+    constructor(newRoleId: number, newRole: string) {
+        this.roleId = newRoleId;
+        this.role = newRole;
     }
 }

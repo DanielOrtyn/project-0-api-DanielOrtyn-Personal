@@ -1,46 +1,50 @@
-import express from "express"
-import bodyParser from 'body-parser'
-import { userRouter } from "./controller/user-router";
-import { spaceshipRouter } from "./controller/spaceship-router";
-import { sessionMiddleware } from "./middleware/session.middleware";
+import express from 'express';
+import bodyParser from 'body-parser';
+import { sessionMiddleware } from './middleware/session.middleware';
+import { userRouter } from './router/user-router';
+import { convertSqlUser } from './model/DataTransferObject/User.dto';
+import { ValidateLogin } from './router/service/user-service';
 
-const app = express()
+const app = express();
 
 app.use((req, res, next) => {
-    console.log(`req processed with url: ${req.url} and method: ${req.method}.`)
-    next()
-})
+    console.log(`req processed with url: ${req.url} and method: ${req.method}.`);
+    next();
+});
 
-app.use(bodyParser.json())
-app.use(sessionMiddleware)
+app.use(bodyParser.json());
+app.use(sessionMiddleware);
 
 app.get(`/test`, (req, res) => {
-    console.log('req processed.')
-    res.send(`Here is the response data`)
-})
+    console.log('req processed.');
+    res.send(`Here is the response data`);
+});
 
-app.post(`/test`, (req, res) => {
-    console.log('posted to test.')
-    let body = req.body
-    console.log(body)
-    res.send(`saved test call`)
-})
+app.post(`/login`, async (req, res) => {
+    console.log(`login request made`);
+    const { username, password } = req.body;
+    const serverRes = await ValidateLogin(username, password);
 
+    if (serverRes) {
+        req.session.user = convertSqlUser(serverRes[0]);
+        console.log(req.session.user);
+        res.end();
+    }
+    else {
+        res.sendStatus(401);
+    }
+});
 
-// app.get('/spaceships', (req, res) => {
-//     console.log(`spaceships get request recieved`)
-//     res.json([new SpaceShip(`Eagle 5`, `SpaceRV`), new SpaceShip(`Death Star`, `Planatoid`)])
-// })
-
-app.get('/hello', (req, res) => {
-    console.log(`hello get request recieved`)
-    res.json(`Hello Person!!!`)
-})
+app.post(`/logout`, (req, res) => {
+    console.log(`logout request made`);
+    req.session.user = undefined;
+    console.log(req.session.user);
+    res.sendStatus(200);
+});
 
 /**
  * Register Routers
  */
-app.use(`/users`, userRouter)
-app.use(`/spaceships`, spaceshipRouter)
+app.use(`/user`, userRouter);
 app.listen(8080);
-console.log(`end of file`)
+console.log(`Server Started`);

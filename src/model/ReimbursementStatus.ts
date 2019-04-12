@@ -1,11 +1,5 @@
 
-export class ReimbursementStatus {
-    private static idCounter = 0
-    statusID: number
-    status: string
-
-    constructor(newStatus = `Incomplete`) {
-        this.statusID = ReimbursementStatus.idCounter++
-        this.status = newStatus
-    }
+export interface ReimbursementStatus {
+    statusID: number;
+    status: string;
 }

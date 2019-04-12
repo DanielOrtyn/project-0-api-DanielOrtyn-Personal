@@ -14,9 +14,12 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "pg": "^7.9.0",
+    "tslint": "^5.15.0"
   },
   "devDependencies": {
-    "@types/express-session": "^1.15.12"
+    "@types/express-session": "^1.15.12",
+    "typescript": "^3.4.3"
   }
 }
