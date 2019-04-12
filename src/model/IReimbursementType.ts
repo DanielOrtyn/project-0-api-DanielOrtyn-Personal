@@ -1,5 +1,5 @@
 
-export interface ReimbursementType {
+export interface IReimbursementType {
     typeID: number;
     type: string;
 }
