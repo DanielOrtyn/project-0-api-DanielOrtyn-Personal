@@ -1,5 +1,5 @@
 
-import { IRole } from './model/IRole';
+import { IRole } from './model/Server/IRole';
 import { GetRoleList } from './router/service/roles-service';
 import { ISqlRole } from './model/Database/ISQLRole.dbo';
 import { convertSqlRole } from './model/DataTransferObject/Role.dto';

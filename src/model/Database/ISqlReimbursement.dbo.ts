@@ -1,10 +1,10 @@
 
-export interface Reimbursement {
-    reimbursementId: number;
+export interface ISqlReimbursement {
+    reimbursementid: number;
     author: number;
     amount: number;
-    dateSubmitted: number;
-    dateResolved: number;
+    datesubmitted: number;
+    dateresolved: number;
     description: string;
     resolver: number;
     status: number;
