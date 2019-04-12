@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { userRouter } from './controller/user-controller';
 import { sessionMiddleware } from './middleware/session.middleware';
-import { ValidateLogin } from './controller/user-service';
-import { User } from './model/user';
+import { userRouter } from './router/user-router';
+import { convertSqlUser } from './model/DataTransferObject/User.dto';
+import { ValidateLogin } from './router/service/user-service';
 
 const app = express();
 
@@ -26,7 +26,7 @@ app.post(`/login`, async (req, res) => {
     const serverRes = await ValidateLogin(username, password);
 
     if (serverRes) {
-        req.session.user = <User>(serverRes[0]);
+        req.session.user = convertSqlUser(serverRes[0]);
         console.log(req.session.user);
         res.end();
     }
@@ -45,6 +45,6 @@ app.post(`/logout`, (req, res) => {
 /**
  * Register Routers
  */
-app.use(`/users`, userRouter);
+app.use(`/user`, userRouter);
 app.listen(8080);
 console.log(`Server Started`);

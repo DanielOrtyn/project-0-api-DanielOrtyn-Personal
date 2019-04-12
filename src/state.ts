@@ -1,15 +1,13 @@
-import { User } from './model/user';
-import { Role } from './model/Role';
 
-export let roles: Role[] = [
-    new Role(`Admin`),
-    new Role(`Associate`)
-];
+import { IRole } from './model/IRole';
+import { GetRoleList } from './router/service/roles-service';
+import { ISqlRole } from './model/Database/ISQLRole.dbo';
+import { convertSqlRole } from './model/DataTransferObject/Role.dto';
 
+export let roles: IRole[] = [];
 
-export let users: User[] = [
-    new User(1, `DanielOrtyn`, `pass`, `Daniel`, `Ortyn`, `danielortyn@comcast.net`, roles[0]),
-    new User(2, `BestJake`, `pass`, `Jake`, `First`, `aFakeEmail@gmail.com`, roles[1]),
-    new User(3, `MiddleJake`, `pass`, `Jake`, `Second`, `aFakeEmail@gmail.com`, roles[1]),
-    new User(4, `WorstJake`, `pass`, `Jake`, `Third`, `aFakeEmail@gmail.com`, roles[1]),
-];
+GetRoleList().then(function whenOk(response) {
+    for (const row of response) {
+        roles.push(convertSqlRole(<ISqlRole>row));
+    }
+});

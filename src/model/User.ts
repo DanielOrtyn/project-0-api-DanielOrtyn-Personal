@@ -1,22 +1,24 @@
-import { Role } from './Role';
+import { IUser } from './IUser';
+import { IRole } from './IRole';
 
-export interface User {
+
+export class User implements IUser {
     userId: number;
     username: string;
     password: string;
     firstName: string;
     lastName: string;
     email: string;
-    role: Role;
+    role: IRole;
 
-    // constructor(newUserId = 0, newUsername = ``, newPassword = ``,
-    //     newFirstName = ``, newLastName = ``, newEmail = ``, newRole: Role) {
-    //     this.userId = newUserId;
-    //     this.username = newUsername;
-    //     this.password = newPassword;
-    //     this.firstName = newFirstName;
-    //     this.lastName = newLastName;
-    //     this.email = newEmail;
-    //     this.role = newRole;
-    // }
+    constructor(newUserId: number, newUsername: string, newPassword: string,
+        newFirstName: string, newLastName: string, newEmail: string, newRole: IRole) {
+        this.userId = newUserId;
+        this.username = newUsername;
+        this.password = newPassword;
+        this.firstName = newFirstName;
+        this.lastName = newLastName;
+        this.email = newEmail;
+        this.role = newRole;
+    }
 }
