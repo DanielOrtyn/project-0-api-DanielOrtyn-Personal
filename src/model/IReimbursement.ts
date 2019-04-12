@@ -1,5 +1,3 @@
-import { IReimbursementStatus } from './IReimbursementStatus';
-import { IReimbursementType } from './IReimbursementType';
 
 export interface IReimbursement {
     reimbursementId: number;
@@ -9,6 +7,6 @@ export interface IReimbursement {
     dateResolved: number;
     description: string;
     resolver: number;
-    status: IReimbursementStatus;
-    type: IReimbursementType;
+    status: number;
+    type: number;
 }

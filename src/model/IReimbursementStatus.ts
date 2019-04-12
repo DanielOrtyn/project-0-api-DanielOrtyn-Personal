@@ -1,5 +1,5 @@
 
 export interface IReimbursementStatus {
-    statusID: number;
+    statusId: number;
     status: string;
 }
