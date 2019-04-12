@@ -1,8 +1,8 @@
 import { ISqlUser } from '../Database/ISqlUser.dbo';
 import { roles } from '../../state';
-import { IRole } from '../IRole';
-import { IUser } from '../IUser';
-import { User } from '../User';
+import { IRole } from '../Server/IRole';
+import { IUser } from '../Server/IUser';
+import { User } from '../Server/User';
 
 
 export function convertSqlUser(sqlUser: ISqlUser): IUser {

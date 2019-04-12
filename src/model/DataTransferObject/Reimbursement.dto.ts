@@ -1,12 +1,12 @@
 import { ISqlReimbursement } from '../Database/ISqlReimbursement.dbo';
 import { ISqlReimbursementStatus } from '../Database/ISqlReimbursementStatus.dbo';
 import { ISqlReimbursementType } from '../Database/ISqlReimbursementType.dbo';
-import { IReimbursement } from '../IReimbursement';
-import { IReimbursementStatus } from '../IReimbursementStatus';
-import { IReimbursementType } from '../IReimbursementType';
-import { Reimbursement } from '../Reimbursement';
-import { ReimbursementStatus } from '../ReimbursementStatus';
-import { ReimbursementType } from '../ReimbursementType';
+import { IReimbursement } from '../Server/IReimbursement';
+import { IReimbursementStatus } from '../Server/IReimbursementStatus';
+import { IReimbursementType } from '../Server/IReimbursementType';
+import { Reimbursement } from '../Server/Reimbursement';
+import { ReimbursementStatus } from '../Server/ReimbursementStatus';
+import { ReimbursementType } from '../Server/ReimbursementType';
 
 
 export function convertSqlReimbursement(sqlReimbursement: ISqlReimbursement): IReimbursement {
