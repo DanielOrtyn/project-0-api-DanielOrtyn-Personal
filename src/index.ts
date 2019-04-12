@@ -1,40 +1,50 @@
-import express from "express"
-import bodyParser from 'body-parser'
-import { userRouter } from "./controller/user-router";
-import { sessionMiddleware } from "./middleware/session.middleware";
+import express from 'express';
+import bodyParser from 'body-parser';
+import { userRouter } from './controller/user-controller';
+import { sessionMiddleware } from './middleware/session.middleware';
+import { ValidateLogin } from './controller/user-service';
+import { User } from './model/user';
 
-const app = express()
+const app = express();
 
 app.use((req, res, next) => {
-    console.log(`req processed with url: ${req.url} and method: ${req.method}.`)
-    next()
-})
+    console.log(`req processed with url: ${req.url} and method: ${req.method}.`);
+    next();
+});
 
-app.use(bodyParser.json())
-app.use(sessionMiddleware)
+app.use(bodyParser.json());
+app.use(sessionMiddleware);
 
 app.get(`/test`, (req, res) => {
-    console.log('req processed.')
-    res.send(`Here is the response data`)
-})
+    console.log('req processed.');
+    res.send(`Here is the response data`);
+});
 
-userRouter.post(`/login`, (req, res) => {
-    console.log(`login request made`)
-    const { username, password } = req.body
-    const user = users.find(u => u.username === username && u.password === password)
+app.post(`/login`, async (req, res) => {
+    console.log(`login request made`);
+    const { username, password } = req.body;
+    const serverRes = await ValidateLogin(username, password);
 
-    if (user) {
-        req.session.user = user
-        res.end()
+    if (serverRes) {
+        req.session.user = <User>(serverRes[0]);
+        console.log(req.session.user);
+        res.end();
     }
     else {
-        res.sendStatus(401)
+        res.sendStatus(401);
     }
-})
+});
+
+app.post(`/logout`, (req, res) => {
+    console.log(`logout request made`);
+    req.session.user = undefined;
+    console.log(req.session.user);
+    res.sendStatus(200);
+});
 
 /**
  * Register Routers
  */
-app.use(`/users`, userRouter)
+app.use(`/users`, userRouter);
 app.listen(8080);
-console.log(`end of file`)
+console.log(`Server Started`);
