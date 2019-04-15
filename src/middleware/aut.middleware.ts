@@ -6,7 +6,12 @@ export function authMiddleware(roles: string[]) {
             next();
         }
         else {
-            res.sendStatus(403);
+            res.sendStatus(401);
         }
     };
+}
+
+export function customAuthauthMiddleware(currentRole: string, roles: string[], check: any, toCheck: any) {
+    const isAuthorized = currentRole && roles.includes(currentRole);
+    return isAuthorized || check === toCheck;
 }

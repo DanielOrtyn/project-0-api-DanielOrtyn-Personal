@@ -12,7 +12,7 @@ export class User implements IUser {
     role: IRole;
 
     constructor(newUserId: number, newUsername: string, newPassword: string,
-        newFirstName: string, newLastName: string, newEmail: string, newRole: IRole) {
+        newFirstName: string, newLastName: string, newEmail: string, newRole: IRole = undefined) {
         this.userId = newUserId;
         this.username = newUsername;
         this.password = newPassword;
