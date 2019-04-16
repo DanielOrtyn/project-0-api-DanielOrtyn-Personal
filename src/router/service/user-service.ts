@@ -39,7 +39,7 @@ export async function GetAllUser(userid: number) {
     return result.rows;
 }
 
-export async function GetUser(userid: number) {
+export async function  GetUser(userid: number) {
     let client: PoolClient;
     let result = undefined;
     try {

@@ -1,7 +1,7 @@
 
 
 import express from 'express';
-import { authMiddleware, customAuthauthMiddleware } from '../../middleware/aut.middleware';
+import { authMiddleware, matchUserIdAuthauthMiddleware } from '../../middleware/aut.middleware';
 import { GetUser, GetAllUser, UpdateUser } from '.././service/user-service';
 import { User } from '../../model/Server/User';
 import { convertSqlUser } from '../../model/DataTransferObject/User.dto';
@@ -18,7 +18,6 @@ userRouter.get(``,
     [authMiddleware(['finance-manager']),
     async (req, res) => {
         const id: number = req.params.id;
-        console.log(`retreiving user with id: ${req.params.id}`);
         const userRows = await GetAllUser(id);
         const userList: User[] = [];
         for (const userRow of userRows) {
@@ -37,11 +36,9 @@ userRouter.get(``,
  */
 userRouter.get(`/:id`, async (req, res) => {
     const id: number = req.params.id;
-    if (customAuthauthMiddleware(req.session.user.role.role, ['admin', 'finance-manager'],
-        req.session.user.userId, id)) {
-        console.log(`retrieving user with id: ${id}`);
+    if (matchUserIdAuthauthMiddleware(req.session.user.role.role, ['admin', 'finance-manager'], id)) {
         const userRows = await GetUser(id);
-        if (userRows && userRows.length == 1) {
+        if (userRows && userRows.length === 1) {
             const retrievedUser = convertSqlUser(userRows[0]);
             retrievedUser.role = convertSqlRole(userRows[0]);
             res.status(200).json(retrievedUser);
@@ -59,11 +56,9 @@ userRouter.get(`/:id`, async (req, res) => {
 userRouter.patch(``,
     [authMiddleware(['admin']),
     async (req, res) => {
-        console.log(`recieved \'users\' endpoint patch request`);
-        console.log(`retreiving user with id: ${req.params.id}`);
         const updateResponse = await UpdateUser(req.body);
 
-        if (updateResponse && updateResponse.rows.length == 1) {
+        if (updateResponse && updateResponse.rows.length === 1) {
             const updateduser = convertSqlUser(updateResponse.rows[0]);
             updateduser.role = convertSqlRole(updateResponse.rows[0]);
             console.log(updateduser);

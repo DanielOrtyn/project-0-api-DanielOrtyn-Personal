@@ -11,7 +11,9 @@ export function authMiddleware(roles: string[]) {
     };
 }
 
-export function customAuthauthMiddleware(currentRole: string, roles: string[], check: any, toCheck: any) {
+export function matchUserIdAuthauthMiddleware(session: Express.Session, roles: string[], userId) {
+    const currentRole = session.user && session.user.role && session.user.role.role;
     const isAuthorized = currentRole && roles.includes(currentRole);
-    return isAuthorized || check === toCheck;
+    const currentUserId = session.user && session.user.userId;
+    return isAuthorized || currentUserId === userId;
 }

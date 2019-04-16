@@ -5,6 +5,7 @@ import { convertSqlUser } from './model/DataTransferObject/User.dto';
 import { ValidateLogin } from './router/service/user-service';
 import { userRouter } from './router/router/user-router';
 import { convertSqlRole } from './model/DataTransferObject/Role.dto';
+import { reimbursementRouter } from './router/router/reimbursements-router';
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.post(`/login`, async (req, res) => {
     const { username, password } = req.body;
     const serverRes = await ValidateLogin(username, password);
 
-    if (serverRes && serverRes.length == 1) {
+    if (serverRes && serverRes.length === 1) {
         req.session.user = convertSqlUser(serverRes[0]);
         req.session.user.role = convertSqlRole(serverRes[0]);
         console.log(req.session.user);
@@ -48,5 +49,6 @@ app.post(`/logout`, (req, res) => {
  * Register Routers
  */
 app.use(`/users`, userRouter);
+app.use(`/reimbursements`, reimbursementRouter);
 app.listen(8080);
 console.log(`Server Started`);
