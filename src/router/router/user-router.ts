@@ -22,7 +22,7 @@ userRouter.get(``,
         const userList: User[] = [];
         for (const userRow of userRows) {
             userList.push(convertSqlUser(userRow));
-            userList[userList.length].role = convertSqlRole(userRow);
+            userList[userList.length - 1].role = convertSqlRole(userRow);
         }
         console.log(`User list sent`);
         res.json(userList);
