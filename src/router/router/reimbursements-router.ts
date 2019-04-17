@@ -1,7 +1,7 @@
 
 
 import express from 'express';
-import { authMiddleware, matchUserIdAuthauthMiddleware } from '../../middleware/aut.middleware';
+import { authMiddleware, matchUserIdAuthauthMiddleware, sendInvalidAuthMessage } from '../../middleware/aut.middleware';
 import { Reimbursement } from '../../model/Server/Reimbursement';
 import { convertSqlReimbursement } from '../../model/DataTransferObject/Reimbursement.dto';
 import { GetAuthorReimbursements, GetStatusReimbursements, CreateReimbursement, UpdateReimbursement } from '../service/reimbursements-service';
@@ -48,7 +48,7 @@ reimbursementRouter.get(`/author/userId/:userId`,
                 res.sendStatus(400);
             }
         } else {
-            res.sendStatus(401);
+            sendInvalidAuthMessage(res);
         }
     }
 );
@@ -68,7 +68,7 @@ reimbursementRouter.post(``,
 );
 
 reimbursementRouter.patch(``,
-[authMiddleware(['admin', 'finance-manager']),
+[authMiddleware(['finance-manager']),
     async (req, res) => {
         const updateResponse = await UpdateReimbursement(req.body);
 

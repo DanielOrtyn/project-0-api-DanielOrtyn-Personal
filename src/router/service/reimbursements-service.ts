@@ -62,7 +62,6 @@ export async function CreateReimbursement(userId: number, reimbursement: ISqlRei
         queryString = `${queryString}, $${fieldParams.length}`;
 
         queryString = `${queryString}) RETURNING reimbursementid;`;
-
         const insertResponse = await client.query(queryString, fieldParams);
         const reimbursementId: number = insertResponse.rows[0]['reimbursementid'];
         const selectStatement = `SELECT * FROM ${REIMBURSEMENT_TABLE_NAME} WHERE reimbursementid = ${reimbursementId}`;
@@ -123,14 +122,10 @@ export async function UpdateReimbursement(reimbursement: ISqlReimbursement) {
             const queryString = `UPDATE ${REIMBURSEMENT_TABLE_NAME} SET` +
                 ` ${querySetters.substring(2)} WHERE reimbursementid = ${reimbursement.reimbursementid};`;
 
-            console.log(queryString);
-            const responseUpdate = await client.query(queryString, fieldParams);
-            console.log(responseUpdate);
+            await client.query(queryString, fieldParams);
             const selectStatement = `SELECT * FROM ${REIMBURSEMENT_TABLE_NAME} WHERE reimbursementid = ${reimbursement.reimbursementid}`;
 
-            console.log(selectStatement);
             selectResult = await client.query(selectStatement);
-            console.log(selectResult);
         }
     } catch (err) {
         console.log(err);

@@ -39,7 +39,7 @@ export async function GetAllUser(userid: number) {
     return result.rows;
 }
 
-export async function  GetUser(userid: number) {
+export async function GetUser(userid: number) {
     let client: PoolClient;
     let result = undefined;
     try {
@@ -63,42 +63,39 @@ export async function UpdateUser(userUpdate: ISqlUser) {
         client = await connectionPool.connect();
 
         console.log('querybuilding starting');
-        let queryString = `UPDATE ${USER_TABLE_NAME} SET`;
-        let fieldCount: number = 0;
         const fieldParams: any[] = [];
+        let querySetters = ``;
         if (userUpdate.username) {
-            fieldCount++;
-            queryString = `${queryString} username = $${fieldCount}`;
             fieldParams.push(userUpdate.username);
+            querySetters = `${querySetters}, username = $${fieldParams.length}`;
         }
         if (userUpdate.password) {
-            fieldCount++;
-            queryString = `${queryString}, password = $${fieldCount}`;
             fieldParams.push(userUpdate.password);
+            querySetters = `${querySetters}, password = $${fieldParams.length}`;
         }
         if (userUpdate.firstname) {
-            fieldCount++;
-            queryString = `${queryString}, firstname = $${fieldCount}`;
             fieldParams.push(userUpdate.firstname);
+            querySetters = `${querySetters}, firstname = $${fieldParams.length}`;
         }
         if (userUpdate.lastname) {
-            fieldCount++;
-            queryString = `${queryString}, lastname = $${fieldCount}`;
             fieldParams.push(userUpdate.lastname);
+            querySetters = `${querySetters}, lastname = $${fieldParams.length}`;
         }
         if (userUpdate.email) {
-            fieldCount++;
-            queryString = `${queryString}, email = $${fieldCount}`;
             fieldParams.push(userUpdate.email);
+            querySetters = `${querySetters}, email = $${fieldParams.length}`;
         }
         if (userUpdate.roleid) {
-            fieldCount++;
-            queryString = `${queryString}, roleid = $${fieldCount}`;
             fieldParams.push(userUpdate.roleid);
+            querySetters = `${querySetters}, roleid = $${fieldParams.length}`;
         }
-        fieldCount++;
-        queryString = `${queryString} WHERE userid = $${fieldCount}`;
+        if (querySetters.length === 0) {
+            return undefined;
+        }
+
         fieldParams.push(userUpdate.userid);
+        const queryString = `UPDATE ${USER_TABLE_NAME} SET` +
+            `${querySetters.substring(1)} WHERE userid = $${fieldParams.length}`;
 
         console.log(`Query: ${queryString}`);
         await client.query(queryString, fieldParams);

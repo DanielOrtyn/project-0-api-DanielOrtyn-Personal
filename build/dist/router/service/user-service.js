@@ -39,7 +39,7 @@ var connection_1 = require("../../connection/connection");
 var USER_TABLE_NAME = connection_1.SCHEMA_NAME + ".users";
 function ValidateLogin(username, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var client, result, queryString, err_1;
+        var client, result, querySetters, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:

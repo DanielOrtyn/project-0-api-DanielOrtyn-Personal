@@ -1,7 +1,7 @@
 
 
 import express from 'express';
-import { authMiddleware, matchUserIdAuthauthMiddleware } from '../../middleware/aut.middleware';
+import { authMiddleware, matchUserIdAuthauthMiddleware, sendInvalidAuthMessage } from '../../middleware/aut.middleware';
 import { GetUser, GetAllUser, UpdateUser } from '.././service/user-service';
 import { User } from '../../model/Server/User';
 import { convertSqlUser } from '../../model/DataTransferObject/User.dto';
@@ -36,7 +36,7 @@ userRouter.get(``,
  */
 userRouter.get(`/:id`, async (req, res) => {
     const id: number = req.params.id;
-    if (matchUserIdAuthauthMiddleware(req.session.user.role.role, ['admin', 'finance-manager'], id)) {
+    if (matchUserIdAuthauthMiddleware(req.session, ['finance-manager'], id)) {
         const userRows = await GetUser(id);
         if (userRows && userRows.length === 1) {
             const retrievedUser = convertSqlUser(userRows[0]);
@@ -48,10 +48,9 @@ userRouter.get(`/:id`, async (req, res) => {
         }
     }
     else {
-        res.sendStatus(401);
+        sendInvalidAuthMessage(res);
     }
-}
-);
+});
 
 userRouter.patch(``,
     [authMiddleware(['admin']),
