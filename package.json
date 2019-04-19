@@ -16,6 +16,7 @@
     "express-session": "^1.15.6",
     "nodemon": "^1.18.10",
     "pg": "^7.9.0",
+    "ts-node": "^8.1.0",
     "tslint": "^5.15.0"
   },
   "devDependencies": {
