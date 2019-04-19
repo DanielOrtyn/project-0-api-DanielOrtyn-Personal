@@ -2,10 +2,11 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { sessionMiddleware } from './middleware/session.middleware';
 import { convertSqlUser } from './model/DataTransferObject/User.dto';
-import { ValidateLogin } from './router/service/user-service';
+import { ValidateLogin, GetAllUser } from './router/service/user-service';
 import { userRouter } from './router/router/user-router';
 import { convertSqlRole } from './model/DataTransferObject/Role.dto';
 import { reimbursementRouter } from './router/router/reimbursements-router';
+import { User } from './model/Server/User';
 
 const app = express();
 
@@ -17,9 +18,17 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(sessionMiddleware);
 
-app.get(`/test`, (req, res) => {
+app.get(`/test`, async (req, res) => {
     console.log('req processed.');
     res.send(`Here is the response data`);
+    const userRows = await GetAllUser();
+    const userList: User[] = [];
+    for (const userRow of userRows) {
+        userList.push(convertSqlUser(userRow));
+        userList[userList.length - 1].role = convertSqlRole(userRow);
+    }
+    console.log(`User list sent`);
+    res.json(userList);
 });
 
 app.post(`/login`, async (req, res) => {

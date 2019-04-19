@@ -17,8 +17,7 @@ export const userRouter = express.Router();
 userRouter.get(``,
     [authMiddleware(['finance-manager']),
     async (req, res) => {
-        const id: number = req.params.id;
-        const userRows = await GetAllUser(id);
+        const userRows = await GetAllUser();
         const userList: User[] = [];
         for (const userRow of userRows) {
             userList.push(convertSqlUser(userRow));

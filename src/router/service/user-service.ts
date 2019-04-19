@@ -22,7 +22,7 @@ export async function ValidateLogin(username: string, password: string) {
     return result.rows;
 }
 
-export async function GetAllUser(userid: number) {
+export async function GetAllUser() {
     let client: PoolClient;
     let result = undefined;
     try {
