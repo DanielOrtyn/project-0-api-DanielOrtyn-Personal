@@ -50,5 +50,6 @@ app.post(`/logout`, (req, res) => {
  */
 app.use(`/users`, userRouter);
 app.use(`/reimbursements`, reimbursementRouter);
-app.listen(process.env['REVATURE_LISTEN_PORT']);
-console.log(`Server Started`);
+const portNumber = Number.parseInt(process.env['REVATURE_LISTEN_PORT']);
+app.listen(portNumber);
+console.log(`Server Started. Listening on Port: ${portNumber}`);
