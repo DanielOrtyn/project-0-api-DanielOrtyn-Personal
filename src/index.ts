@@ -27,7 +27,7 @@ app.get(`/test`, async (req, res) => {
         userList[userList.length - 1].role = convertSqlRole(userRow);
     }
     console.log(`User list sent`);
-    res.send('Spcialist of special');//.json(userList);
+    res.send('Spcialist of special, but not that special');//.json(userList);
 });
 
 app.post(`/login`, async (req, res) => {
