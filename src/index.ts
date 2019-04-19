@@ -20,7 +20,6 @@ app.use(sessionMiddleware);
 
 app.get(`/test`, async (req, res) => {
     console.log('req processed.');
-    res.send(`Here is the response data`);
     const userRows = await GetAllUser();
     const userList: User[] = [];
     for (const userRow of userRows) {
