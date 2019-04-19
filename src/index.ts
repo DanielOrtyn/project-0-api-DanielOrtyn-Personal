@@ -50,5 +50,5 @@ app.post(`/logout`, (req, res) => {
  */
 app.use(`/users`, userRouter);
 app.use(`/reimbursements`, reimbursementRouter);
-app.listen(8080);
+app.listen(process.env['REVATURE_LISTEN_PORT']);
 console.log(`Server Started`);
