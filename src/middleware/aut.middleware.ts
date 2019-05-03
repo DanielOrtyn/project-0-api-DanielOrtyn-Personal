@@ -1,11 +1,16 @@
 
 export function authMiddleware(roles: string[]) {
     return (req, res, next) => {
+        console.log('Auth Done');
+        console.log(req.session);
+        // console.log(req.session.user);
         const isAuthorized = req.session.user && roles.includes(req.session.user.role.role);
         if (isAuthorized) {
             next();
+            console.log(`Authorized`);
         }
         else {
+            console.log(`Invalid Auth`);
             sendInvalidAuthMessage(res);
         }
     };

@@ -2,7 +2,7 @@
 
 import express from 'express';
 import { authMiddleware, matchUserIdAuthauthMiddleware, sendInvalidAuthMessage } from '../../middleware/aut.middleware';
-import { GetUser, GetAllUser, UpdateUser } from '.././service/user-service';
+import { GetUser, GetAllUser, UpdateUser, ValidateLogin } from '.././service/user-service';
 import { User } from '../../model/Server/User';
 import { convertSqlUser } from '../../model/DataTransferObject/User.dto';
 import { convertSqlRole } from '../../model/DataTransferObject/Role.dto';
@@ -17,6 +17,7 @@ export const userRouter = express.Router();
 userRouter.get(``,
     [authMiddleware(['finance-manager']),
     async (req, res) => {
+        console.log(`Getting Users`);
         const userRows = await GetAllUser();
         const userList: User[] = [];
         for (const userRow of userRows) {
@@ -24,7 +25,7 @@ userRouter.get(``,
             userList[userList.length - 1].role = convertSqlRole(userRow);
         }
         console.log(`User list sent`);
-        res.json(userList);
+        res.status(200).json(userList);
     }
     ]
 );
@@ -68,3 +69,28 @@ userRouter.patch(``,
     }
     ]
 );
+
+userRouter.post(`/login`, async (req, res) => {
+    console.log(`login request made`);
+    const { username, password } = req.body;
+    const serverRes = await ValidateLogin(username, password);
+
+    if (serverRes && serverRes.length === 1) {
+        req.session.user = convertSqlUser(serverRes[0]);
+        req.session.user.role = convertSqlRole(serverRes[0]);
+        console.log(req.session.user);
+        res.status(200).json(req.session.user); // .send(`Login Succeeded`);
+    }
+    else {
+        console.log(`login failed`);
+        res.status(400).json({ message: 'Invalid Credentials' });
+    }
+});
+
+
+userRouter.post(`/logout`, (req, res) => {
+    console.log(`logout request made`);
+    req.session.user = undefined;
+    console.log(`Current User: ${req.session.user}`);
+    res.sendStatus(200);
+});

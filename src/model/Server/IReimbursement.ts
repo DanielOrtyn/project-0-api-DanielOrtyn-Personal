@@ -7,6 +7,6 @@ export interface IReimbursement {
     dateResolved: number;
     description: string;
     resolver: number;
-    status: number;
-    type: number;
+    status?: IReimbursementStatus;
+    type?: IReimbursementType;
 }

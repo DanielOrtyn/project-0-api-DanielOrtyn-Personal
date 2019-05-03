@@ -13,8 +13,7 @@ export function convertSqlReimbursement(sqlReimbursement: ISqlReimbursement): IR
     return new Reimbursement(sqlReimbursement.reimbursementid, sqlReimbursement.author,
         sqlReimbursement.amount, sqlReimbursement.datesubmitted,
         sqlReimbursement.dateresolved, sqlReimbursement.description,
-        sqlReimbursement.resolver, sqlReimbursement.status,
-        sqlReimbursement.type);
+        sqlReimbursement.resolver);
 }
 
 export function convertSqlReimbursementStatus(sqlReimbursementStatus: ISqlReimbursementStatus): IReimbursementStatus {

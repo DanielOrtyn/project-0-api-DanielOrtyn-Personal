@@ -3,13 +3,73 @@ import { PoolClient } from 'pg';
 import { ISqlReimbursement } from '../../model/Database/ISqlReimbursement.dbo';
 
 const REIMBURSEMENT_TABLE_NAME = `${SCHEMA_NAME}.reimbursement`;
+const REIMBURSEMENT_STATUS_TABLE_NAME = `${SCHEMA_NAME}.reimbursementstatus`;
+const REIMBURSEMENT_TYPE_TABLE_NAME = `${SCHEMA_NAME}.reimbursementtype`;
+
+export async function GetReimbursement(id: number) {
+    let client: PoolClient;
+    let result = undefined;
+    try {
+        client = await connectionPool.connect();
+        const queryString = `SELECT * FROM ${REIMBURSEMENT_TABLE_NAME}` +
+            ` INNER JOIN ${REIMBURSEMENT_STATUS_TABLE_NAME}` +
+            ` ON reimbursement.status = reimbursementstatus.statusid` +
+            ` INNER JOIN ${REIMBURSEMENT_TYPE_TABLE_NAME}` +
+            ` ON reimbursement.type = reimbursementtype.typeid` +
+            ` WHERE reimbursementId = $1;`;
+        result = await client.query(queryString, [id]);
+    } catch (err) {
+        console.log(err);
+        return undefined;
+    } finally {
+        client && client.release();
+    }
+    return result;
+}
+
+export async function GetReimbursementStatusList() {
+    let client: PoolClient;
+    let result = undefined;
+    try {
+        client = await connectionPool.connect();
+        const queryString = `SELECT * FROM ${REIMBURSEMENT_STATUS_TABLE_NAME};`;
+        result = await client.query(queryString);
+    } catch (err) {
+        console.log(err);
+        return undefined;
+    } finally {
+        client && client.release();
+    }
+    return result;
+}
+
+export async function GetReimbursementTypeList() {
+    let client: PoolClient;
+    let result = undefined;
+    try {
+        client = await connectionPool.connect();
+        const queryString = `SELECT * FROM ${REIMBURSEMENT_TYPE_TABLE_NAME};`;
+        result = await client.query(queryString);
+    } catch (err) {
+        console.log(err);
+        return undefined;
+    } finally {
+        client && client.release();
+    }
+    return result;
+}
 
 export async function GetStatusReimbursements(statusId: number) {
     let client: PoolClient;
     let result = undefined;
     try {
         client = await connectionPool.connect();
-        const queryString = `SELECT * FROM ${REIMBURSEMENT_TABLE_NAME} WHERE status = $1;`;
+        const queryString = `SELECT * FROM ${REIMBURSEMENT_TABLE_NAME}` +
+            ` INNER JOIN ${REIMBURSEMENT_STATUS_TABLE_NAME}` +
+            ` ON reimbursement.status = reimbursementstatus.statusid` +
+            ` INNER JOIN ${REIMBURSEMENT_TYPE_TABLE_NAME}` +
+            ` ON reimbursement.type = reimbursementtype.typeid` +
+            ` WHERE reimbursement.status = $1;`;
         result = await client.query(queryString, [statusId]);
     } catch (err) {
         console.log(err);
@@ -25,7 +85,12 @@ export async function GetAuthorReimbursements(authorId: number) {
     let result = undefined;
     try {
         client = await connectionPool.connect();
-        const queryString = `SELECT * FROM ${REIMBURSEMENT_TABLE_NAME} WHERE author = $1;`;
+        const queryString = `SELECT * FROM ${REIMBURSEMENT_TABLE_NAME}` +
+            ` INNER JOIN ${REIMBURSEMENT_STATUS_TABLE_NAME}` +
+            ` ON reimbursement.status = reimbursementstatus.statusid` +
+            ` INNER JOIN ${REIMBURSEMENT_TYPE_TABLE_NAME}` +
+            ` ON reimbursement.type = reimbursementtype.typeid` +
+            ` WHERE author = $1;`;
         result = await client.query(queryString, [authorId]);
     } catch (err) {
         console.log(err);

@@ -1,5 +1,7 @@
 
 import { IReimbursement } from './IReimbursement';
+import { IReimbursementStatus } from './IReimbursementStatus';
+import { IReimbursementType } from './IReimbursementType';
 
 export class Reimbursement implements IReimbursement {
     reimbursementId: number;
@@ -9,14 +11,14 @@ export class Reimbursement implements IReimbursement {
     dateResolved: number;
     description: string;
     resolver: number;
-    status: number;
-    type: number;
+    status?: IReimbursementStatus;
+    type?: IReimbursementType;
 
     constructor(newReimbursementId: number, newAuthor: number,
         newAmount: number, newDateSubmitted: number,
         newDateResolved: number, newDescription: string,
-        newResolver: number, newStatus: number,
-        newType: number) {
+        newResolver: number, newStatus: IReimbursementStatus = undefined,
+        newType: IReimbursementType = undefined) {
 
         this.reimbursementId = newReimbursementId;
         this.author = newAuthor;
