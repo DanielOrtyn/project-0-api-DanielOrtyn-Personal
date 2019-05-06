@@ -1,11 +1,12 @@
 
 import express from 'express';
-import { GetAllUser } from '.././service/user-service';
+import { GetAllUser, GetAllUserRole } from '.././service/user-service';
 import { ISqlUser } from '../../model/Database/ISqlUser.dbo';
 import { GetReimbursementStatusList, GetReimbursementTypeList } from '../service/reimbursements-service';
 import { ReimbursementStatus } from '../../model/Server/ReimbursementStatus';
 import { convertSqlReimbursementStatus, convertSqlReimbursementType } from '../../model/DataTransferObject/Reimbursement.dto';
 import { ReimbursementType } from '../../model/Server/ReimbursementType';
+import { ISqlRole } from '../../model/Database/ISqlRole.dbo';
 
 
 /**
@@ -33,6 +34,24 @@ universalRouter.get(`/simpleUserList`,
     }
 );
 
+universalRouter.get(`/UserRoleList`,
+    async (req, res) => {
+        console.log(`Getting User Role List`);
+        const roleRows = await GetAllUserRole();
+        console.log(roleRows);
+        const roleList = [roleRows.length];
+        for (const roleRow of roleRows) {
+            const roleSql: ISqlRole = roleRow as ISqlRole;
+            roleList.push({
+                roleId: roleSql.roleid,
+                role: roleSql.role
+            });
+        }
+        console.log(roleList);
+        console.log(`User Role list sent`);
+        res.status(200).json(roleList);
+    }
+);
 
 universalRouter.get(`/statusList`,
     async (req, res) => {

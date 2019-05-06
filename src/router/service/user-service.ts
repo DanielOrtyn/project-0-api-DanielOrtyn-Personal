@@ -22,6 +22,22 @@ export async function ValidateLogin(username: string, password: string) {
     return result.rows;
 }
 
+export async function GetAllUserRole() {
+    let client: PoolClient;
+    let result = undefined;
+    try {
+        client = await connectionPool.connect();
+        const queryString = `SELECT * FROM ${ROLE_TABLE_NAME};`;
+        result = await client.query(queryString);
+    } catch (err) {
+        console.log(err);
+        return undefined;
+    } finally {
+        client && client.release();
+    }
+    return result.rows;
+}
+
 export async function GetAllUser() {
     let client: PoolClient;
     let result = undefined;
@@ -63,6 +79,7 @@ export async function UpdateUser(userUpdate: ISqlUser) {
         client = await connectionPool.connect();
 
         console.log('querybuilding starting');
+        console.log(userUpdate);
         const fieldParams: any[] = [];
         let querySetters = ``;
         if (userUpdate.username) {
