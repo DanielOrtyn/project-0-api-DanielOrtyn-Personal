@@ -1,7 +1,7 @@
 
 
 import express from 'express';
-import { authMiddleware } from '../../middleware/aut.middleware';
+import { authMiddleware, matchUserIdAuthauthMiddleware, sendInvalidAuthMessage } from '../../middleware/aut.middleware';
 import { Reimbursement } from '../../model/Server/Reimbursement';
 import { convertSqlReimbursement, convertSqlReimbursementStatus, convertSqlReimbursementType } from '../../model/DataTransferObject/Reimbursement.dto';
 import { GetAuthorReimbursements, GetStatusReimbursements, CreateReimbursement, UpdateReimbursement, GetReimbursement } from '../service/reimbursements-service';
@@ -30,20 +30,24 @@ reimbursementRouter.get(`/status/:statusId`,
 
 reimbursementRouter.get(`/author/userId/:userId`,
     async (req, res) => {
-        const userId: number = req.params.userId;
-        // if (matchUserIdAuthauthMiddleware(req.session, ['finance-manager'], userId)) {
-        const response = await GetAuthorReimbursements(userId);
-        const reimbursementList: Reimbursement[] = [];
-        if (response && response.rows) {
-            parseReimbursementRows(reimbursementList, response.rows);
-            res.json(reimbursementList);
+        const id: number = req.params.userId;
+        console.log(id);
+        if (matchUserIdAuthauthMiddleware(req.session, ['finance-manager'], id)) {
+            const userId: number = req.params.userId;
+            // if (matchUserIdAuthauthMiddleware(req.session, ['finance-manager'], userId)) {
+            const response = await GetAuthorReimbursements(userId);
+            const reimbursementList: Reimbursement[] = [];
+            if (response && response.rows) {
+                parseReimbursementRows(reimbursementList, response.rows);
+                res.json(reimbursementList);
+            }
+            else {
+                res.sendStatus(400);
+            }
         }
         else {
-            res.sendStatus(400);
+            sendInvalidAuthMessage(res);
         }
-        // } else {
-        //     sendInvalidAuthMessage(res);
-        // }
     }
 );
 

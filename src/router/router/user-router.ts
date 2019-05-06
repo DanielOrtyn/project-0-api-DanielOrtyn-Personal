@@ -36,7 +36,7 @@ userRouter.get(``,
  */
 userRouter.get(`/:id`, async (req, res) => {
     const id: number = req.params.id;
-    if (matchUserIdAuthauthMiddleware(req.session, ['finance-manager'], id)) {
+    if (matchUserIdAuthauthMiddleware(req.session, ['finance-manager', 'admin'], id)) {
         const userRows = await GetUser(id);
         if (userRows && userRows.length === 1) {
             const retrievedUser = convertSqlUser(userRows[0]);
